@@ -44,9 +44,9 @@ module.exports = yeoman.generators.Base.extend({
   copyMainFiles: function(){
     this.copy("global/footer/_footer.html", "app/footer.html");
     this.copy("_gruntfile.js", "Gruntfile.js");
-    this.copy("gulpfile.js", "Gulpfile.js");
+    this.copy("_gulpfile.js", "gulpfile.js");
     this.copy("_package.json", "package.json");
-    this.copy("base.less", "app/css/base.less");
+    this.copy("global/base.less", "app/css/base.less");
 
     var context = {
       site_name: this.appName
