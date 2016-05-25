@@ -1,24 +1,47 @@
 'use strict';
 var util = require('util');
 var path = require('path');
-var yeoman = require('yeoman-generator');
+var generators = require('yeoman-generator');
 var chalk = require('chalk');
 var yosay = require('yosay');
 var _ = require("underscore.string");
 
-module.exports = yeoman.generators.Base.extend({
+module.exports = generators.Base.extend({
   prompting: function () {
     var done = this.async();
-
+    console.log('scaffoldFolders RUN')
     // Have Yeoman greet the user.
     this.log(yosay(
       'Welcome to the stellar ' + chalk.red('Page') + ' generator!'
     ));
-
-    var prompts = [{
-      name: 'appName',
-      message: 'What is your app\'s name ?'
-    },{
+    this.name = path.basename(process.cwd());
+    this.license = 'ISC';
+    this.description = '';
+    this.author = '';
+    var prompts = [
+      {
+        type: 'input',
+        name: 'name',
+        message: 'name of app:', default: this.name
+      },
+      {
+        type: 'input',
+        name: 'description',
+        message: 'description:', default: this.description
+      },
+      {
+        type: 'input',
+        name: 'license',
+        message: 'license:',
+        default: this.license
+      },
+      {
+        type: 'input',
+        name: 'author',
+        message: 'author:',
+        default: this.author
+      },
+      {
       type: 'confirm',
       name: 'addDemoSection',
       message: 'Would you like to generate a demo section ?',
@@ -28,35 +51,33 @@ module.exports = yeoman.generators.Base.extend({
     this.prompt(prompts, function (props) {
       this.appName = props.appName;
       this.addDemoSection = props.addDemoSection;
-
+      this.pkgName = props.name;
+      this.license = props.license;
+      this.author = props.author;
+      this.description = props.description;
       done();
     }.bind(this));
   },
 
-  scaffoldFolders: function(){
-    this.mkdir("app");
-    this.mkdir("app/css");
-    this.mkdir("app/sections");
-    this.mkdir("build");
-  },
+  writing: {
+    app: function () {
+      var context = {
+        site_name: this.appName
+      };
+      this.template('_package.json', 'package.json');  //
+      this.template('_gulpfile.js', 'gulpfile.js');
+      this.copy('global/footer/_footer.html', 'app/footer.html');
+      this.template("global/header/_header.html", "app/header.html", context);
+      this.copy("global/base.less", "app/css/base.less");
+    },
 
 
-  copyMainFiles: function(){
-    this.copy("global/footer/_footer.html", "app/footer.html");
-    this.copy("_gruntfile.js", "Gruntfile.js");
-    this.copy("_gulpfile.js", "gulpfile.js");
-    this.copy("_package.json", "package.json");
-    this.copy("global/base.less", "app/css/base.less");
 
-    var context = {
-      site_name: this.appName
-    };
 
-    this.template("global/header/_header.html", "app/header.html", context);
-  },
 
 
   generateDemoSection: function(){
+    console.log('generateDemoSection RUN')
     if (this.addDemoSection) {
       var done = this.async();
       this.invoke("page:section", {args: ["Demo Section"]}, function () {
