@@ -14,7 +14,7 @@
     "test": "mocha"
   },
   "files": [
-    "app",
+    "app"
   ],
   "keywords": [
     "yeoman-generator"
@@ -23,7 +23,8 @@
     "yeoman-generator": "*",
     "chalk": "*",
     "yosay": "*",
-    "underscore.string": "*"
+    "lodash": "*",
+    "walk":"*"
   },
   "devDependencies": {
     "mocha": "*"

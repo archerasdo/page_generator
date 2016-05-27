@@ -1,92 +1,80 @@
 'use strict';
-var util = require('util');
-var path = require('path');
-var generators = require('yeoman-generator');
-var chalk = require('chalk');
-var yosay = require('yosay');
-var _ = require("underscore.string");
 
-module.exports = generators.Base.extend({
-  prompting: function () {
-    var done = this.async();
-    console.log('scaffoldFolders RUN')
-    // Have Yeoman greet the user.
-    this.log(yosay(
-      'Welcome to the stellar ' + chalk.red('Page') + ' generator!'
-    ));
-    this.name = path.basename(process.cwd());
-    this.license = 'ISC';
-    this.description = '';
-    this.author = '';
-    var prompts = [
-      {
-        type: 'input',
-        name: 'name',
-        message: 'name of app:', default: this.name
-      },
-      {
-        type: 'input',
-        name: 'description',
-        message: 'description:', default: this.description
-      },
-      {
-        type: 'input',
-        name: 'license',
-        message: 'license:',
-        default: this.license
-      },
-      {
-        type: 'input',
-        name: 'author',
-        message: 'author:',
-        default: this.author
-      },
-      {
-      type: 'confirm',
-      name: 'addDemoSection',
-      message: 'Would you like to generate a demo section ?',
-      default: true
-    }];
-
-    this.prompt(prompts, function (props) {
-      this.appName = props.appName;
-      this.addDemoSection = props.addDemoSection;
-      this.pkgName = props.name;
-      this.license = props.license;
-      this.author = props.author;
-      this.description = props.description;
-      done();
-    }.bind(this));
-  },
-
+var base = require('./base.js')
+module.exports = base.extend({
+  //prompting: function () {
+  //  var done = this.async();
+  //  console.log('scaffoldFolders RUN')
+  //  // Have Yeoman greet the user.
+  //  this.log(yosay(
+  //    'Welcome to the stellar ' + chalk.red('Page') + ' generator!'
+  //  ));
+  //  //this.appName = path.basename(process.cwd());
+  //  this.license = 'ISC';
+  //  this.description = '';
+  //  this.author = '';
+  //  var prompts = [
+  //    {
+  //      type: 'input',
+  //      name: 'appName',
+  //      message: 'name of app:', default: 'app'
+  //    },
+  //    {
+  //    type: 'confirm',
+  //    name: 'addDemoSection',
+  //    message: 'Would you like to generate a demo section ?',
+  //    default: true
+  //  }];
+  //
+  //  this.prompt(prompts, function (props) {
+  //    this.appName = props.appName;
+  //    this.addDemoSection = props.addDemoSection;
+  //    this.pkgName = props.name;
+  //    this.license = props.license;
+  //    this.author = props.author;
+  //    this.description = props.description;
+  //    done();
+  //  }.bind(this));
+  //},
+  //constructor: function () {
+  //  base.apply(this, arguments);
+  //
+  //  // This makes `appname` a required argument.
+  //  this.argument('appname', { type: String, required: true });
+  //  // And you can then access it later on this way; e.g. CamelCased
+  //  this.appname = _.camelCase(this.appname);
+  //},
   writing: {
     app: function () {
-      var context = {
-        site_name: this.appName
-      };
-      this.template('_package.json', 'package.json');  //
-      this.template('_gulpfile.js', 'gulpfile.js');
-      this.copy('global/footer/_footer.html', 'app/footer.html');
-      this.template("global/header/_header.html", "app/header.html", context);
-      this.copy("global/base.less", "app/css/base.less");
-    },
-
-
-
-
-
-
-  generateDemoSection: function(){
-    console.log('generateDemoSection RUN')
-    if (this.addDemoSection) {
-      var done = this.async();
-      this.invoke("page:section", {args: ["Demo Section"]}, function () {
-        done();
-      });
-    } else {
-      this.write("app/menu.html","");
+      console.log('writing start')
+      this.copyAllFromTemplatePath();
+      //var context = {
+      //  site_name: this.appName
+      //};
+      //console.log(this.appName)
+      //this.template('_package.json', this.appName + '/package.json');  //
+      //this.template('_gulpfile.js', this.appName +'/gulpfile.js');
+      //this.copy('global/footer/_footer.html', this.appName + '/tpl/footer.html');
+      //this.template("global/header/_header.html",this.appName +  "/tpl/header.html", context);
+      //this.copy("global/base.less",this.appName +  "/css/base.less");
     }
   },
+
+
+
+
+
+  //generateDemoSection: function(){
+  //  console.log('generateDemoSection RUN')
+  //  if (this.addDemoSection) {
+  //    var done = this.async();
+  //    this.invoke("page:section", {args: this.appName}, function () {
+  //      done();
+  //    });
+  //  } else {
+  //    this.write("app/menu.html","");
+  //  }
+  //},
   //generateMenu: function(){
   //  var menu = this.read("_menu.html");
   //

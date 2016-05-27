@@ -1,31 +1,31 @@
 'use strict';
-var util = require('util');
-var yeoman = require('yeoman-generator');
-var _ = require("underscore.string");
+const util = require('util');
+const yeoman = require('yeoman-generator');
+const _ = require("lodash");
 
 module.exports = yeoman.generators.Base.extend({
 
 
   initializing: function () {
-    this.argument('name', {
+    this.argument('appName', {
       required: true,
       type: String,
       desc: 'The subgenerator name'
     });
 
-    this.log('You called the Page subgenerator with the argument ' + this.name + '.');
+    this.log('You called the Page subgenerator with the argument ' + this.appName + '.');
   },
 
   generateSection: function(){
-    console.log('this:'+ this.name);
+    console.log('this:'+ this.appName);
     var context = {
-      content: this.name,
-      id: _.classify(this.name)
+      content: this.appName,
+      id: _.classify(this.appName)
     }
 
-    var fileBase = Date.now()  + "_" + _.underscored(this.name);
-    var htmlFile = "app/sections/" + fileBase + ".html";
-    var cssFile  = "app/css/" + fileBase + ".less";
+    var fileBase = Date.now()  + "_" + _.underscored(this.appName);
+    var htmlFile = this.appName + "/sections/" + fileBase + ".html";
+    var cssFile  = this.appName + "/css/" + fileBase + ".less";
 
     this.template("_section.html", htmlFile, context);
     this.template("_section.less", cssFile, context);
@@ -36,9 +36,9 @@ module.exports = yeoman.generators.Base.extend({
 
     var t = '<%= name %>';
     var files = this.expand("app/sections/*.html");
-
+    console.log(_)
     for (var i = 0; i < files.length; i++) {
-      var name = _.chain(files[i]).strRight("_").strLeftBack(".html").humanize().value();
+      var name = _(files[i]).strRight("_").strLeftBack(".html").humanize().value();
 
       var context = {
         name: name,
@@ -49,7 +49,7 @@ module.exports = yeoman.generators.Base.extend({
       menu = this.append(menu, "div.menu", link);
     }
 
-    this.write("app/menu.html", menu);
+    this.write(this.appName + "/menu.html", menu);
   }
 
 
